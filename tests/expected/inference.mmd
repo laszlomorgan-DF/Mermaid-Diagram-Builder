@@ -1,0 +1,54 @@
+erDiagram
+  customers["customers"] {
+    int id PK
+    text name
+  }
+  categories["categories"] {
+    int id PK
+    int parent_id "guessed FK to categories"
+    text title
+  }
+  products["products"] {
+    int id PK
+    int category_id "guessed FK to categories"
+    varchar(20) sku
+  }
+  orders["orders"] {
+    int id PK
+    int customer_id "guessed FK to customers"
+    int billing_customer_id "guessed FK to customers"
+    date placed_at
+  }
+  order_items["order_items"] {
+    int id PK
+    int order_id "guessed FK to orders"
+    int product_id "guessed FK to products"
+    int qty
+  }
+  stores["stores"] {
+    char(4) storecode PK
+    text city
+  }
+  stock["stock"] {
+    char(4) storecode PK "guessed FK to stores"
+    int product_id PK "guessed FK to products"
+    int on_hand
+  }
+  audit_log["audit_log"] {
+    int id PK
+    int actor_id
+    int entity_id
+    text payload
+  }
+  coupons["coupons"] {
+    int id PK
+    varchar(30) customer_id
+  }
+  categories |o..o{ categories : "guess: parent_id"
+  categories |o..o{ products : "guess: category_id"
+  customers ||..o{ orders : "guess: customer_id"
+  customers |o..o{ orders : "guess: billing_customer_id"
+  orders ||..o{ order_items : "guess: order_id"
+  products ||..o{ order_items : "guess: product_id"
+  stores ||..o{ stock : "guess: storecode"
+  products ||..o{ stock : "guess: product_id"

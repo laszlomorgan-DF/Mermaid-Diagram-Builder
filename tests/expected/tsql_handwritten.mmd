@@ -1,0 +1,31 @@
+erDiagram
+  hr__Departments["hr.Departments"] {
+    INT DepartmentId PK
+    NVARCHAR(100) Name UK
+    INT ParentDepartmentId FK
+    CHAR(6) CostCentre
+  }
+  hr__Employees["hr.Employees"] {
+    INT EmployeeId PK
+    INT DepartmentId FK
+    INT ManagerId FK
+    NVARCHAR(50) FirstName
+    NVARCHAR(50) LastName
+    computed FullName
+    DECIMAL(12,2) Salary
+    INT Order
+    VARCHAR(10) Weird_Name "SQL name: Weird]Name"
+    INT CompanyCarId FK
+    DATE HiredOn
+    DATE TerminatedOn
+  }
+  dbo__EmployeeBadges["dbo.EmployeeBadges"] {
+    INT EmployeeId PK, FK
+    VARCHAR(20) BadgeNo
+  }
+  fleet__CompanyCars["fleet.CompanyCars (not in script)"]
+  hr__Departments |o..o{ hr__Departments : "ParentDepartmentId"
+  hr__Departments ||..o{ hr__Employees : "DepartmentId"
+  hr__Employees |o..o{ hr__Employees : "FK_Employees_Manager"
+  fleet__CompanyCars |o..o{ hr__Employees : "FK_Employees_CompanyCar"
+  hr__Employees ||--o| dbo__EmployeeBadges : "FK_Badge_Employee"

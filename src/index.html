@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SQL ER Diagram Builder</title>
+<style>
+/*INLINE:css*/
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo" aria-hidden="true">◇</span> SQL ER Diagram Builder</div>
+  <label class="field inline">Dialect
+    <select id="dialect">
+      <option value="auto">Auto-detect</option>
+      <option value="tsql">SQL Server (T-SQL)</option>
+      <option value="postgres">PostgreSQL</option>
+      <option value="mysql">MySQL / MariaDB</option>
+    </select>
+  </label>
+  <span id="dialectHint" class="hint"></span>
+  <div class="spacer"></div>
+  <button id="btnOpenSql" class="btn" title="Open a .sql file (or drop it anywhere)">Open SQL…</button>
+  <button id="btnOpenProject" class="btn" title="Open a saved project (.json)">Open project…</button>
+  <button id="btnSaveProject" class="btn" title="Save SQL + your manual changes + view settings">Save project</button>
+  <div class="menu">
+    <button id="btnExport" class="btn primary" aria-haspopup="true" aria-expanded="false">Export ▾</button>
+    <div id="exportMenu" class="menu-list" role="menu" hidden>
+      <button role="menuitem" data-export="mmd">Mermaid file (.mmd)</button>
+      <button role="menuitem" data-export="copy">Copy Mermaid to clipboard</button>
+      <button role="menuitem" data-export="svg">Image (.svg)</button>
+      <button role="menuitem" data-export="png">Image (.png)</button>
+      <button role="menuitem" data-export="json">Model (.json)</button>
+      <button role="menuitem" data-export="migration">Manual changes as SQL (.sql)</button>
+      <button role="menuitem" data-export="ddl">Full schema as SQL (.sql)</button>
+    </div>
+  </div>
+  <input id="fileSql" type="file" accept=".sql,.txt,.ddl,text/plain" hidden>
+  <input id="fileProject" type="file" accept=".json,application/json" hidden>
+</header>
+
+<main class="layout">
+  <section class="left" id="leftPane">
+    <nav class="tabs" role="tablist">
+      <button role="tab" class="tab active" data-tab="sql">SQL</button>
+      <button role="tab" class="tab" data-tab="tables">Tables <span id="tablesCount" class="pill"></span></button>
+      <button role="tab" class="tab" data-tab="verify">Verify</button>
+      <button role="tab" class="tab" data-tab="mermaid">Mermaid</button>
+    </nav>
+
+    <div class="tabpanel active" data-panel="sql">
+      <textarea id="sql" spellcheck="false" wrap="off" placeholder="Paste CREATE TABLE / ALTER TABLE statements here, open a .sql file, or drop one anywhere on the page."></textarea>
+      <div id="parseSummary" class="summary"></div>
+    </div>
+
+    <div class="tabpanel" data-panel="tables">
+      <div class="row gap">
+        <input id="tableSearch" type="search" placeholder="Find table…" aria-label="Find table">
+        <button id="btnNewTable" class="btn small">+ New table</button>
+      </div>
+      <div id="newTableForm" class="card" hidden>
+        <div class="row gap wrap">
+          <label class="field">Schema <input id="ntSchema" list="schemaList" size="10"></label>
+          <label class="field grow">Table name <input id="ntName"></label>
+        </div>
+        <div class="row gap"><button id="ntCreate" class="btn primary small">Create</button><button id="ntCancel" class="btn small">Cancel</button></div>
+      </div>
+      <datalist id="schemaList"></datalist>
+      <datalist id="typeList"></datalist>
+      <div class="tables-split">
+        <ul id="tableList" class="table-list" role="listbox" aria-label="Tables"></ul>
+        <div id="tableDetail" class="table-detail"></div>
+      </div>
+    </div>
+
+    <div class="tabpanel" data-panel="verify">
+      <p class="muted">Check the diagram against the database itself. Run this query on the database the SQL came from, then paste the result (with headers) below. The comparison uses only what was read from the SQL, so your manual additions are listed separately.</p>
+      <div class="row gap"><strong id="catalogDialect"></strong><div class="spacer"></div><button id="btnCopyQuery" class="btn small">Copy query</button></div>
+      <pre id="catalogQuery" class="code small"></pre>
+      <label class="field">Query result (CSV, tab-separated, or psql/mysql table output)
+        <textarea id="catalogText" rows="6" spellcheck="false" wrap="off" placeholder="kind	table_schema	table_name	column_name	…"></textarea>
+      </label>
+      <label class="check"><input type="checkbox" id="fillKeys"> Use keys from this result where the SQL has none (they are marked “from catalog”)</label>
+      <div id="verifyResult"></div>
+    </div>
+
+    <div class="tabpanel" data-panel="mermaid">
+      <div class="row gap"><span class="muted">Generated Mermaid (read-only)</span><div class="spacer"></div><button id="btnCopyMermaid" class="btn small">Copy</button></div>
+      <pre id="mermaidCode" class="code"></pre>
+    </div>
+  </section>
+
+  <div class="splitter" id="splitter" role="separator" aria-orientation="vertical" tabindex="0" title="Drag to resize"></div>
+
+  <section class="right">
+    <div class="toolbar">
+      <div id="schemaFilter" class="chips" aria-label="Schemas"></div>
+      <label class="field inline">Focus
+        <select id="focus"><option value="">All tables</option></select>
+      </label>
+      <label class="field inline" id="depthWrap" hidden>Depth
+        <select id="depth"><option>1</option><option>2</option><option>3</option></select>
+      </label>
+      <label class="check"><input type="checkbox" id="optGuesses" checked> Guessed links</label>
+      <label class="check"><input type="checkbox" id="optKeysOnly"> Keys only</label>
+      <label class="check"><input type="checkbox" id="optComments"> Descriptions</label>
+      <label class="check"><input type="checkbox" id="optNullable"> Mark nullable</label>
+      <label class="field inline">Layout
+        <select id="optDirection"><option value="TB">Top → bottom</option><option value="LR">Left → right</option></select>
+      </label>
+      <div class="spacer"></div>
+      <div class="zoom">
+        <button id="zoomOut" class="btn icon" title="Zoom out">−</button>
+        <button id="zoomFit" class="btn icon" title="Fit to window">⤢</button>
+        <button id="zoomIn" class="btn icon" title="Zoom in">+</button>
+      </div>
+    </div>
+    <div id="diagramWrap" class="diagram-wrap" tabindex="0" aria-label="Diagram (drag to pan, wheel to zoom)">
+      <div id="diagram" class="diagram"></div>
+      <div id="emptyState" class="empty">
+        <h2>Turn SQL into an ER diagram</h2>
+        <p>Paste table definitions into the <strong>SQL</strong> tab, click <strong>Open SQL…</strong>, or drop a <code>.sql</code> file anywhere on this page.</p>
+        <p>Add your own columns and tables in the <strong>Tables</strong> tab — they are kept separately, so re-importing the SQL never loses them.</p>
+        <p class="muted">Try a sample:</p>
+        <div class="row gap wrap" id="sampleButtons"></div>
+      </div>
+      <div id="renderError" class="render-error" hidden></div>
+    </div>
+    <div class="problems" id="problems">
+      <div class="problems-head">
+        <button id="problemsToggle" class="btn ghost" aria-expanded="true"><span id="problemsTitle">Problems</span></button>
+        <label class="check"><input type="checkbox" id="showAllLog"> Show every statement</label>
+      </div>
+      <div id="problemsBody" class="problems-body"></div>
+    </div>
+  </section>
+</main>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<!--INLINE:scripts-->
+</body>
+</html>

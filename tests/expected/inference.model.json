@@ -1,0 +1,371 @@
+{
+  "canonical": {
+    "dialect": "postgres",
+    "tables": [
+      {
+        "schema": "public",
+        "name": "audit_log",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "actor_id",
+            "type": "int",
+            "nullable": true
+          },
+          {
+            "name": "entity_id",
+            "type": "int",
+            "nullable": true
+          },
+          {
+            "name": "payload",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "id"
+          ]
+        },
+        "uniques": [],
+        "fks": []
+      },
+      {
+        "schema": "public",
+        "name": "categories",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "parent_id",
+            "type": "int",
+            "nullable": true
+          },
+          {
+            "name": "title",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "id"
+          ]
+        },
+        "uniques": [],
+        "fks": []
+      },
+      {
+        "schema": "public",
+        "name": "coupons",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "customer_id",
+            "type": "varchar(30)",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "id"
+          ]
+        },
+        "uniques": [],
+        "fks": []
+      },
+      {
+        "schema": "public",
+        "name": "customers",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "id"
+          ]
+        },
+        "uniques": [],
+        "fks": []
+      },
+      {
+        "schema": "public",
+        "name": "order_items",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "order_id",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "product_id",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "qty",
+            "type": "int",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "id"
+          ]
+        },
+        "uniques": [],
+        "fks": []
+      },
+      {
+        "schema": "public",
+        "name": "orders",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "customer_id",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "billing_customer_id",
+            "type": "int",
+            "nullable": true
+          },
+          {
+            "name": "placed_at",
+            "type": "date",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "id"
+          ]
+        },
+        "uniques": [],
+        "fks": []
+      },
+      {
+        "schema": "public",
+        "name": "products",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "category_id",
+            "type": "int",
+            "nullable": true
+          },
+          {
+            "name": "sku",
+            "type": "varchar(20)",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "id"
+          ]
+        },
+        "uniques": [],
+        "fks": []
+      },
+      {
+        "schema": "public",
+        "name": "stock",
+        "comment": "",
+        "columns": [
+          {
+            "name": "storecode",
+            "type": "char(4)",
+            "nullable": false
+          },
+          {
+            "name": "product_id",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "on_hand",
+            "type": "int",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "storecode",
+            "product_id"
+          ]
+        },
+        "uniques": [],
+        "fks": []
+      },
+      {
+        "schema": "public",
+        "name": "stores",
+        "comment": "",
+        "columns": [
+          {
+            "name": "storecode",
+            "type": "char(4)",
+            "nullable": false
+          },
+          {
+            "name": "city",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "storecode"
+          ]
+        },
+        "uniques": [],
+        "fks": []
+      }
+    ]
+  },
+  "summary": {
+    "statements": 9,
+    "applied": 9,
+    "partial": 0,
+    "ignored": 0,
+    "unread": 0,
+    "tables": 9,
+    "columns": 27,
+    "fks": 0,
+    "warnings": 0
+  },
+  "crossCheck": {
+    "checked": 9,
+    "confirmed": 9,
+    "disagreed": 0,
+    "grammarFailed": 0,
+    "misread": 0
+  },
+  "log": [
+    {
+      "line": 2,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.customers",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 3,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.categories",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 4,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.products",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 5,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.orders",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 6,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.order_items",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 7,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.stores",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 8,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.stock",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 9,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.audit_log",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 10,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.coupons",
+      "check": "confirmed",
+      "warnings": []
+    }
+  ],
+  "issues": []
+}

@@ -1,0 +1,418 @@
+{
+  "canonical": {
+    "dialect": "postgres",
+    "tables": [
+      {
+        "schema": "public",
+        "name": "measurements",
+        "comment": "",
+        "columns": [
+          {
+            "name": "city_id",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "logdate",
+            "type": "date",
+            "nullable": false
+          }
+        ],
+        "pk": null,
+        "uniques": [],
+        "fks": []
+      },
+      {
+        "schema": "public",
+        "name": "profiles",
+        "comment": "",
+        "columns": [
+          {
+            "name": "user_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "bio",
+            "type": "text",
+            "nullable": false
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "user_id"
+          ]
+        },
+        "uniques": [],
+        "fks": [
+          {
+            "name": null,
+            "columns": [
+              "user_id"
+            ],
+            "refSchema": "public",
+            "refTable": "users",
+            "refColumns": [
+              "userid"
+            ],
+            "onDelete": "CASCADE",
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          }
+        ]
+      },
+      {
+        "schema": "public",
+        "name": "team_members",
+        "comment": "",
+        "columns": [
+          {
+            "name": "team_id",
+            "type": "bigint",
+            "nullable": false
+          },
+          {
+            "name": "user_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "member_role",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "joined_on",
+            "type": "date",
+            "nullable": false,
+            "default": "current_date"
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "team_id",
+            "user_id"
+          ]
+        },
+        "uniques": [],
+        "fks": [
+          {
+            "name": null,
+            "columns": [
+              "team_id"
+            ],
+            "refSchema": "public",
+            "refTable": "Teams",
+            "refColumns": [
+              "id"
+            ],
+            "onDelete": null,
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          },
+          {
+            "name": "team_members_user_fk",
+            "columns": [
+              "user_id"
+            ],
+            "refSchema": "public",
+            "refTable": "users",
+            "refColumns": [
+              "userid"
+            ],
+            "onDelete": null,
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          }
+        ]
+      },
+      {
+        "schema": "public",
+        "name": "Teams",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "type": "bigint",
+            "nullable": false,
+            "identity": true
+          },
+          {
+            "name": "name",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "lead_user_id",
+            "type": "integer",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": "teams_pk",
+          "columns": [
+            "id"
+          ]
+        },
+        "uniques": [],
+        "fks": [
+          {
+            "name": "teams_lead_fk",
+            "columns": [
+              "lead_user_id"
+            ],
+            "refSchema": "public",
+            "refTable": "users",
+            "refColumns": [
+              "userid"
+            ],
+            "onDelete": null,
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          }
+        ]
+      },
+      {
+        "schema": "public",
+        "name": "users",
+        "comment": "",
+        "columns": [
+          {
+            "name": "userid",
+            "type": "serial",
+            "nullable": false
+          },
+          {
+            "name": "Email",
+            "type": "text",
+            "nullable": false
+          },
+          {
+            "name": "nick",
+            "type": "varchar(40)",
+            "nullable": true
+          },
+          {
+            "name": "mood",
+            "type": "mood",
+            "nullable": true,
+            "default": "'happy'"
+          },
+          {
+            "name": "note",
+            "type": "text",
+            "nullable": true,
+            "default": "E'it''s; fine\\n'"
+          },
+          {
+            "name": "created",
+            "type": "timestamptz",
+            "nullable": false,
+            "default": "CURRENT_TIMESTAMP"
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "userid"
+          ]
+        },
+        "uniques": [],
+        "fks": []
+      }
+    ]
+  },
+  "summary": {
+    "statements": 20,
+    "applied": 10,
+    "partial": 0,
+    "ignored": 8,
+    "unread": 2,
+    "tables": 5,
+    "columns": 17,
+    "fks": 4,
+    "warnings": 3
+  },
+  "crossCheck": {
+    "checked": 7,
+    "confirmed": 4,
+    "disagreed": 0,
+    "grammarFailed": 3,
+    "misread": 0
+  },
+  "log": [
+    {
+      "line": 1,
+      "status": "ignored",
+      "kind": "psql",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 4,
+      "status": "ignored",
+      "kind": "create-type",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 6,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.users",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 15,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.profiles",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 20,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.Teams",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 28,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.team_members",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 36,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "public.team_members",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 37,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "public.team_members",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 38,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "public.team_members",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 39,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "public.team_members",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 40,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "public.profiles",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 41,
+      "status": "ignored",
+      "kind": "create-index",
+      "target": "public.users",
+      "check": null,
+      "warnings": [
+        "Unique index users_email_lower uses expressions (lower(\"Email\")); not modelled as a key."
+      ]
+    },
+    {
+      "line": 43,
+      "status": "ignored",
+      "kind": "copy",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 43,
+      "status": "ignored",
+      "kind": "copy-data",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 48,
+      "status": "ignored",
+      "kind": "create-function",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 49,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.measurements",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 50,
+      "status": "unread",
+      "kind": "create-table",
+      "target": "public.measurements_y2026",
+      "check": null,
+      "warnings": [
+        "CREATE TABLE public.measurements_y2026 PARTITION … is not supported (columns come from another object). Table not diagrammed."
+      ]
+    },
+    {
+      "line": 51,
+      "status": "ignored",
+      "kind": "grant",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 52,
+      "status": "unread",
+      "kind": "other",
+      "target": null,
+      "check": null,
+      "warnings": [
+        "Statement not recognised; nothing was read from it."
+      ]
+    },
+    {
+      "line": 53,
+      "status": "ignored",
+      "kind": "psql",
+      "target": null,
+      "check": null,
+      "warnings": []
+    }
+  ],
+  "issues": []
+}

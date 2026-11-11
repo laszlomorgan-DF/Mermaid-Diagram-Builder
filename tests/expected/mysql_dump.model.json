@@ -1,0 +1,362 @@
+{
+  "canonical": {
+    "dialect": "mysql",
+    "tables": [
+      {
+        "schema": "",
+        "name": "companies",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "type": "int unsigned",
+            "nullable": false,
+            "identity": true
+          },
+          {
+            "name": "name",
+            "type": "varchar(150)",
+            "nullable": false
+          },
+          {
+            "name": "vat_no",
+            "type": "varchar(20)",
+            "nullable": true,
+            "default": "NULL"
+          },
+          {
+            "name": "status",
+            "type": "enum('lead','active','churned')",
+            "nullable": false,
+            "default": "'lead'"
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "id"
+          ]
+        },
+        "uniques": [
+          {
+            "name": "uq_companies_vat",
+            "columns": [
+              "vat_no"
+            ],
+            "kind": "constraint",
+            "where": null
+          }
+        ],
+        "fks": []
+      },
+      {
+        "schema": "",
+        "name": "contacts",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "type": "int unsigned",
+            "nullable": false,
+            "identity": true
+          },
+          {
+            "name": "company_id",
+            "type": "int unsigned",
+            "nullable": false
+          },
+          {
+            "name": "email",
+            "type": "varchar(255)",
+            "nullable": false
+          },
+          {
+            "name": "score",
+            "type": "decimal(5,2)",
+            "nullable": true,
+            "default": "'0.00'"
+          },
+          {
+            "name": "created",
+            "type": "datetime",
+            "nullable": true,
+            "default": "CURRENT_TIMESTAMP"
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "id"
+          ]
+        },
+        "uniques": [],
+        "fks": [
+          {
+            "name": "fk_contacts_company",
+            "columns": [
+              "company_id"
+            ],
+            "refSchema": "",
+            "refTable": "companies",
+            "refColumns": [
+              "id"
+            ],
+            "onDelete": "CASCADE",
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          }
+        ]
+      },
+      {
+        "schema": "",
+        "name": "deals",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "type": "int unsigned",
+            "nullable": false,
+            "identity": true
+          },
+          {
+            "name": "company_id",
+            "type": "int unsigned",
+            "nullable": false
+          },
+          {
+            "name": "owner_contact_id",
+            "type": "int unsigned",
+            "nullable": true,
+            "default": "NULL"
+          },
+          {
+            "name": "amount",
+            "type": "decimal(12,2)",
+            "nullable": false
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "id"
+          ]
+        },
+        "uniques": [],
+        "fks": [
+          {
+            "name": "deals_ibfk_1",
+            "columns": [
+              "company_id"
+            ],
+            "refSchema": "",
+            "refTable": "companies",
+            "refColumns": [
+              "id"
+            ],
+            "onDelete": null,
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          },
+          {
+            "name": "deals_ibfk_2",
+            "columns": [
+              "owner_contact_id"
+            ],
+            "refSchema": "",
+            "refTable": "contacts",
+            "refColumns": [
+              "id"
+            ],
+            "onDelete": "SET NULL",
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          }
+        ]
+      },
+      {
+        "schema": "",
+        "name": "notes",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "type": "bigint",
+            "nullable": false,
+            "identity": true
+          },
+          {
+            "name": "deal_id",
+            "type": "int unsigned",
+            "nullable": true,
+            "default": "NULL"
+          },
+          {
+            "name": "body",
+            "type": "text",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "id"
+          ]
+        },
+        "uniques": [],
+        "fks": []
+      }
+    ]
+  },
+  "summary": {
+    "statements": 16,
+    "applied": 4,
+    "partial": 0,
+    "ignored": 12,
+    "unread": 0,
+    "tables": 4,
+    "columns": 16,
+    "fks": 3,
+    "warnings": 0
+  },
+  "crossCheck": {
+    "checked": 4,
+    "confirmed": 4,
+    "disagreed": 0,
+    "grammarFailed": 0,
+    "misread": 0
+  },
+  "log": [
+    {
+      "line": 7,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 8,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 9,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 10,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 16,
+      "status": "ignored",
+      "kind": "drop-table",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 17,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 18,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 19,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "companies",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 27,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 33,
+      "status": "ignored",
+      "kind": "drop-table",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 34,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "contacts",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 49,
+      "status": "ignored",
+      "kind": "drop-table",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 50,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "deals",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 65,
+      "status": "ignored",
+      "kind": "drop-table",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 66,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "notes",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 73,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    }
+  ],
+  "issues": []
+}

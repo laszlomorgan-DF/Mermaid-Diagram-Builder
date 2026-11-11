@@ -1,0 +1,529 @@
+{
+  "canonical": {
+    "dialect": "postgres",
+    "tables": [
+      {
+        "schema": "billing",
+        "name": "invoice_lines",
+        "comment": "",
+        "columns": [
+          {
+            "name": "account_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "invoice_no",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "line_no",
+            "type": "smallint",
+            "nullable": false
+          },
+          {
+            "name": "description",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "amount",
+            "type": "numeric(12,2)",
+            "nullable": false
+          },
+          {
+            "name": "product_id",
+            "type": "bigint",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": "invoice_lines_pkey",
+          "columns": [
+            "account_id",
+            "invoice_no",
+            "line_no"
+          ]
+        },
+        "uniques": [],
+        "fks": [
+          {
+            "name": "invoice_lines_invoice_fkey",
+            "columns": [
+              "account_id",
+              "invoice_no"
+            ],
+            "refSchema": "billing",
+            "refTable": "invoices",
+            "refColumns": [
+              "account_id",
+              "invoice_no"
+            ],
+            "onDelete": null,
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          }
+        ]
+      },
+      {
+        "schema": "billing",
+        "name": "invoices",
+        "comment": "",
+        "columns": [
+          {
+            "name": "account_id",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "invoice_no",
+            "type": "integer",
+            "nullable": false
+          },
+          {
+            "name": "total",
+            "type": "numeric(12,2)",
+            "nullable": false,
+            "default": "0"
+          },
+          {
+            "name": "currency",
+            "type": "character(3)",
+            "nullable": false,
+            "default": "'EUR'::bpchar"
+          },
+          {
+            "name": "issued_on",
+            "type": "date",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": "invoices_pkey",
+          "columns": [
+            "account_id",
+            "invoice_no"
+          ]
+        },
+        "uniques": [],
+        "fks": [
+          {
+            "name": "invoices_account_id_fkey",
+            "columns": [
+              "account_id"
+            ],
+            "refSchema": "public",
+            "refTable": "accounts",
+            "refColumns": [
+              "id"
+            ],
+            "onDelete": "CASCADE",
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          }
+        ]
+      },
+      {
+        "schema": "public",
+        "name": "accounts",
+        "comment": "",
+        "columns": [
+          {
+            "name": "id",
+            "type": "integer",
+            "nullable": false,
+            "default": "nextval('public.accounts_id_seq'::regclass)"
+          },
+          {
+            "name": "email",
+            "type": "character varying(255)",
+            "nullable": false,
+            "comment": "Login email; must be unique"
+          },
+          {
+            "name": "Display Name",
+            "type": "text",
+            "nullable": true
+          },
+          {
+            "name": "tags",
+            "type": "text[]",
+            "nullable": true,
+            "default": "'{}'::text[]"
+          },
+          {
+            "name": "created_at",
+            "type": "timestamp with time zone",
+            "nullable": false,
+            "default": "now()"
+          },
+          {
+            "name": "updated_at",
+            "type": "timestamp without time zone",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": "accounts_pkey",
+          "columns": [
+            "id"
+          ]
+        },
+        "uniques": [
+          {
+            "name": "accounts_email_key",
+            "columns": [
+              "email"
+            ],
+            "kind": "constraint",
+            "where": null
+          }
+        ],
+        "fks": []
+      },
+      {
+        "schema": "public",
+        "name": "products",
+        "comment": "",
+        "columns": [
+          {
+            "name": "product_id",
+            "type": "bigint",
+            "nullable": false
+          },
+          {
+            "name": "sku",
+            "type": "character varying(32)",
+            "nullable": false
+          },
+          {
+            "name": "price",
+            "type": "double precision",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": "products_pkey",
+          "columns": [
+            "product_id"
+          ]
+        },
+        "uniques": [
+          {
+            "name": "products_sku_uq",
+            "columns": [
+              "sku"
+            ],
+            "kind": "index",
+            "where": null
+          }
+        ],
+        "fks": []
+      }
+    ]
+  },
+  "summary": {
+    "statements": 35,
+    "applied": 15,
+    "partial": 0,
+    "ignored": 20,
+    "unread": 0,
+    "tables": 4,
+    "columns": 20,
+    "fks": 2,
+    "warnings": 0
+  },
+  "crossCheck": {
+    "checked": 12,
+    "confirmed": 11,
+    "disagreed": 0,
+    "grammarFailed": 1,
+    "misread": 0
+  },
+  "log": [
+    {
+      "line": 8,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 9,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 10,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 11,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 12,
+      "status": "ignored",
+      "kind": "select",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 13,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 19,
+      "status": "applied",
+      "kind": "create-schema",
+      "target": "billing",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 22,
+      "status": "ignored",
+      "kind": "alter-schema",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 28,
+      "status": "ignored",
+      "kind": "create-function",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 38,
+      "status": "ignored",
+      "kind": "alter-function",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 40,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 42,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 48,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.accounts",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 58,
+      "status": "ignored",
+      "kind": "alter-table",
+      "target": "public.accounts",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 64,
+      "status": "applied",
+      "kind": "comment",
+      "target": "public.accounts.email",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 71,
+      "status": "ignored",
+      "kind": "create-sequence",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 80,
+      "status": "ignored",
+      "kind": "alter-sequence",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 82,
+      "status": "ignored",
+      "kind": "alter-sequence",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 89,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "billing.invoices",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 98,
+      "status": "ignored",
+      "kind": "alter-table",
+      "target": "billing.invoices",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 104,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "billing.invoice_lines",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 114,
+      "status": "ignored",
+      "kind": "alter-table",
+      "target": "billing.invoice_lines",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 120,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "public.products",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 127,
+      "status": "ignored",
+      "kind": "alter-table",
+      "target": "public.products",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 133,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "public.accounts",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 140,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "public.accounts",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 148,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "public.accounts",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 156,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "billing.invoices",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 164,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "billing.invoice_lines",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 172,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "public.products",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 180,
+      "status": "ignored",
+      "kind": "create-index",
+      "target": "billing.invoices",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 187,
+      "status": "applied",
+      "kind": "create-index",
+      "target": "public.products",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 194,
+      "status": "ignored",
+      "kind": "create-trigger",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 201,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "billing.invoices",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 209,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "billing.invoice_lines",
+      "check": "confirmed",
+      "warnings": []
+    }
+  ],
+  "issues": []
+}

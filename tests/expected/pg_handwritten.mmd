@@ -1,0 +1,32 @@
+erDiagram
+  users["users"] {
+    serial userid PK
+    text Email
+    varchar(40) nick
+    mood mood
+    text note
+    timestamptz created
+  }
+  profiles["profiles"] {
+    integer user_id PK, FK
+    text bio
+  }
+  Teams["Teams"] {
+    bigint id PK
+    text name
+    integer lead_user_id FK
+  }
+  team_members["team_members"] {
+    bigint team_id PK, FK
+    integer user_id PK, FK
+    text member_role
+    date joined_on
+  }
+  measurements["measurements"] {
+    int city_id
+    date logdate
+  }
+  users ||--o| profiles : "user_id"
+  users |o..o{ Teams : "teams_lead_fk"
+  Teams ||--o{ team_members : "team_id"
+  users ||--o{ team_members : "team_members_user_fk"

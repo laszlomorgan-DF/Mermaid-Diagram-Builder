@@ -1,0 +1,29 @@
+erDiagram
+  companies["companies"] {
+    int_unsigned id PK
+    varchar(150) name
+    varchar(20) vat_no UK
+    enum(lead,active,churned) status
+  }
+  contacts["contacts"] {
+    int_unsigned id PK
+    int_unsigned company_id FK
+    varchar(255) email
+    decimal(5,2) score
+    datetime created
+  }
+  deals["deals"] {
+    int_unsigned id PK
+    int_unsigned company_id FK
+    int_unsigned owner_contact_id FK
+    decimal(12,2) amount
+  }
+  notes["notes"] {
+    bigint id PK
+    int_unsigned deal_id "guessed FK to deals"
+    text body
+  }
+  companies ||..o{ contacts : "fk_contacts_company"
+  companies ||..o{ deals : "deals_ibfk_1"
+  contacts |o..o{ deals : "deals_ibfk_2"
+  deals |o..o{ notes : "guess: deal_id"

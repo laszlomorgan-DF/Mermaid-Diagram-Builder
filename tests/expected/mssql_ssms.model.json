@@ -1,0 +1,524 @@
+{
+  "canonical": {
+    "dialect": "tsql",
+    "tables": [
+      {
+        "schema": "dbo",
+        "name": "Customers",
+        "comment": "",
+        "columns": [
+          {
+            "name": "CustomerID",
+            "type": "int",
+            "nullable": false,
+            "identity": true
+          },
+          {
+            "name": "Email",
+            "type": "nvarchar(255)",
+            "nullable": false
+          },
+          {
+            "name": "Display Name",
+            "type": "nvarchar(100)",
+            "nullable": true
+          },
+          {
+            "name": "Balance",
+            "type": "decimal(10,2)",
+            "nullable": false,
+            "default": "((0))",
+            "defaultName": "DF_Customers_Balance"
+          },
+          {
+            "name": "Notes",
+            "type": "nvarchar(max)",
+            "nullable": true
+          },
+          {
+            "name": "RowVer",
+            "type": "timestamp",
+            "nullable": false
+          }
+        ],
+        "pk": {
+          "name": "PK_Customers",
+          "columns": [
+            "CustomerID"
+          ]
+        },
+        "uniques": [
+          {
+            "name": "UQ_Customers_Email",
+            "columns": [
+              "Email"
+            ],
+            "kind": "constraint",
+            "where": null
+          }
+        ],
+        "fks": []
+      },
+      {
+        "schema": "dbo",
+        "name": "Products",
+        "comment": "",
+        "columns": [
+          {
+            "name": "ProductCode",
+            "type": "char(8)",
+            "nullable": false
+          },
+          {
+            "name": "Name",
+            "type": "nvarchar(200)",
+            "nullable": false
+          },
+          {
+            "name": "ListPrice",
+            "type": "numeric(12,4)",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "ProductCode"
+          ]
+        },
+        "uniques": [],
+        "fks": []
+      },
+      {
+        "schema": "sales",
+        "name": "OrderLines",
+        "comment": "",
+        "columns": [
+          {
+            "name": "OrderID",
+            "type": "bigint",
+            "nullable": false
+          },
+          {
+            "name": "LineNo",
+            "type": "smallint",
+            "nullable": false
+          },
+          {
+            "name": "ProductCode",
+            "type": "char(8)",
+            "nullable": false
+          },
+          {
+            "name": "Qty",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "UnitPrice",
+            "type": "money",
+            "nullable": false
+          }
+        ],
+        "pk": {
+          "name": "PK_OrderLines",
+          "columns": [
+            "OrderID",
+            "LineNo"
+          ]
+        },
+        "uniques": [],
+        "fks": [
+          {
+            "name": "FK_OrderLines_Orders",
+            "columns": [
+              "OrderID"
+            ],
+            "refSchema": "sales",
+            "refTable": "Orders",
+            "refColumns": [
+              "OrderID"
+            ],
+            "onDelete": "CASCADE",
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          },
+          {
+            "name": "FK_OrderLines_Products",
+            "columns": [
+              "ProductCode"
+            ],
+            "refSchema": "dbo",
+            "refTable": "Products",
+            "refColumns": [
+              "ProductCode"
+            ],
+            "onDelete": null,
+            "onUpdate": null,
+            "disabled": true,
+            "trusted": false
+          }
+        ]
+      },
+      {
+        "schema": "sales",
+        "name": "Orders",
+        "comment": "",
+        "columns": [
+          {
+            "name": "OrderID",
+            "type": "bigint",
+            "nullable": false,
+            "identity": true
+          },
+          {
+            "name": "CustomerID",
+            "type": "int",
+            "nullable": false
+          },
+          {
+            "name": "OrderedAt",
+            "type": "datetime2(7)",
+            "nullable": false
+          },
+          {
+            "name": "Status",
+            "type": "varchar(20)",
+            "nullable": false,
+            "default": "('NEW')"
+          }
+        ],
+        "pk": {
+          "name": "PK_Orders",
+          "columns": [
+            "OrderID"
+          ]
+        },
+        "uniques": [],
+        "fks": [
+          {
+            "name": "FK_Orders_Customers",
+            "columns": [
+              "CustomerID"
+            ],
+            "refSchema": "dbo",
+            "refTable": "Customers",
+            "refColumns": [
+              "CustomerID"
+            ],
+            "onDelete": null,
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          }
+        ]
+      },
+      {
+        "schema": "sales",
+        "name": "Shipments",
+        "comment": "",
+        "columns": [
+          {
+            "name": "ShipmentID",
+            "type": "int",
+            "nullable": false,
+            "identity": true
+          },
+          {
+            "name": "OrderID",
+            "type": "bigint",
+            "nullable": false
+          },
+          {
+            "name": "LineNo",
+            "type": "smallint",
+            "nullable": false
+          },
+          {
+            "name": "ShippedAt",
+            "type": "datetime2(7)",
+            "nullable": true
+          },
+          {
+            "name": "CarrierRef",
+            "type": "uniqueidentifier",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": "PK_Shipments",
+          "columns": [
+            "ShipmentID"
+          ]
+        },
+        "uniques": [
+          {
+            "name": "UX_Shipments_CarrierRef",
+            "columns": [
+              "CarrierRef"
+            ],
+            "kind": "index",
+            "where": "([CarrierRef] IS NOT NULL)"
+          }
+        ],
+        "fks": [
+          {
+            "name": "FK_Shipments_OrderLines",
+            "columns": [
+              "OrderID",
+              "LineNo"
+            ],
+            "refSchema": "sales",
+            "refTable": "OrderLines",
+            "refColumns": [
+              "OrderID",
+              "LineNo"
+            ],
+            "onDelete": null,
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          }
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "statements": 27,
+    "applied": 13,
+    "partial": 0,
+    "ignored": 14,
+    "unread": 0,
+    "tables": 5,
+    "columns": 23,
+    "fks": 4,
+    "warnings": 0
+  },
+  "crossCheck": {
+    "checked": 10,
+    "confirmed": 4,
+    "disagreed": 0,
+    "grammarFailed": 6,
+    "misread": 0
+  },
+  "log": [
+    {
+      "line": 1,
+      "status": "ignored",
+      "kind": "use",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 4,
+      "status": "applied",
+      "kind": "create-schema",
+      "target": "sales",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 7,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 9,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 11,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "dbo.Customers",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 29,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 31,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 33,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "sales.Orders",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 45,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "sales.OrderLines",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 59,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "dbo.Products",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 70,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "sales.Shipments",
+      "check": "confirmed",
+      "warnings": []
+    },
+    {
+      "line": 83,
+      "status": "ignored",
+      "kind": "create-index",
+      "target": "sales.Orders",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 88,
+      "status": "applied",
+      "kind": "create-index",
+      "target": "sales.Shipments",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 95,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "dbo.Customers",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 97,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "sales.Orders",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 99,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "sales.Orders",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 102,
+      "status": "ignored",
+      "kind": "alter-table",
+      "target": "sales.Orders",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 104,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "sales.OrderLines",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 108,
+      "status": "ignored",
+      "kind": "alter-table",
+      "target": "sales.OrderLines",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 110,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "sales.OrderLines",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 113,
+      "status": "ignored",
+      "kind": "alter-table",
+      "target": "sales.OrderLines",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 115,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "sales.Shipments",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 118,
+      "status": "ignored",
+      "kind": "alter-table",
+      "target": "sales.Shipments",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 120,
+      "status": "ignored",
+      "kind": "alter-table",
+      "target": "sales.OrderLines",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 122,
+      "status": "ignored",
+      "kind": "alter-table",
+      "target": "sales.OrderLines",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 125,
+      "status": "ignored",
+      "kind": "create-view",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 128,
+      "status": "ignored",
+      "kind": "create-procedure",
+      "target": null,
+      "check": null,
+      "warnings": []
+    }
+  ],
+  "issues": []
+}

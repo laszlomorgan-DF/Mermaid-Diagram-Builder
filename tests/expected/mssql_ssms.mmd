@@ -1,0 +1,38 @@
+erDiagram
+  dbo__Customers["dbo.Customers"] {
+    int CustomerID PK
+    nvarchar(255) Email UK
+    nvarchar(100) Display_Name "SQL name: Display Name"
+    decimal(10,2) Balance
+    nvarchar(max) Notes
+    timestamp RowVer
+  }
+  sales__Orders["sales.Orders"] {
+    bigint OrderID PK
+    int CustomerID FK
+    datetime2(7) OrderedAt
+    varchar(20) Status
+  }
+  sales__OrderLines["sales.OrderLines"] {
+    bigint OrderID PK, FK
+    smallint LineNo PK
+    char(8) ProductCode FK
+    int Qty
+    money UnitPrice
+  }
+  dbo__Products["dbo.Products"] {
+    char(8) ProductCode PK
+    nvarchar(200) Name
+    numeric(12,4) ListPrice
+  }
+  sales__Shipments["sales.Shipments"] {
+    int ShipmentID PK
+    bigint OrderID FK
+    smallint LineNo FK
+    datetime2(7) ShippedAt
+    uniqueidentifier CarrierRef UK
+  }
+  dbo__Customers ||..o{ sales__Orders : "FK_Orders_Customers"
+  sales__Orders ||--o{ sales__OrderLines : "FK_OrderLines_Orders"
+  dbo__Products ||..o{ sales__OrderLines : "FK_OrderLines_Products (disabled)"
+  sales__OrderLines ||..o{ sales__Shipments : "FK_Shipments_OrderLines"

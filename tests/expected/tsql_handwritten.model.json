@@ -1,0 +1,387 @@
+{
+  "canonical": {
+    "dialect": "tsql",
+    "tables": [
+      {
+        "schema": "dbo",
+        "name": "EmployeeBadges",
+        "comment": "",
+        "columns": [
+          {
+            "name": "EmployeeId",
+            "type": "INT",
+            "nullable": false
+          },
+          {
+            "name": "BadgeNo",
+            "type": "VARCHAR(20)",
+            "nullable": false
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "EmployeeId"
+          ]
+        },
+        "uniques": [],
+        "fks": [
+          {
+            "name": "FK_Badge_Employee",
+            "columns": [
+              "EmployeeId"
+            ],
+            "refSchema": "hr",
+            "refTable": "Employees",
+            "refColumns": [
+              "EmployeeId"
+            ],
+            "onDelete": null,
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          }
+        ]
+      },
+      {
+        "schema": "hr",
+        "name": "Departments",
+        "comment": "",
+        "columns": [
+          {
+            "name": "DepartmentId",
+            "type": "INT",
+            "nullable": false,
+            "identity": true
+          },
+          {
+            "name": "Name",
+            "type": "NVARCHAR(100)",
+            "nullable": false
+          },
+          {
+            "name": "ParentDepartmentId",
+            "type": "INT",
+            "nullable": true
+          },
+          {
+            "name": "CostCentre",
+            "type": "CHAR(6)",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": "PK_Departments",
+          "columns": [
+            "DepartmentId"
+          ]
+        },
+        "uniques": [
+          {
+            "name": null,
+            "columns": [
+              "Name"
+            ],
+            "kind": "constraint",
+            "where": null
+          }
+        ],
+        "fks": [
+          {
+            "name": null,
+            "columns": [
+              "ParentDepartmentId"
+            ],
+            "refSchema": "hr",
+            "refTable": "Departments",
+            "refColumns": [
+              "DepartmentId"
+            ],
+            "onDelete": null,
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          }
+        ]
+      },
+      {
+        "schema": "hr",
+        "name": "Employees",
+        "comment": "People employed by us; includes \"contractors\"",
+        "columns": [
+          {
+            "name": "EmployeeId",
+            "type": "INT",
+            "nullable": false,
+            "identity": true
+          },
+          {
+            "name": "DepartmentId",
+            "type": "INT",
+            "nullable": false
+          },
+          {
+            "name": "ManagerId",
+            "type": "INT",
+            "nullable": true
+          },
+          {
+            "name": "FirstName",
+            "type": "NVARCHAR(50)",
+            "nullable": false
+          },
+          {
+            "name": "LastName",
+            "type": "NVARCHAR(50)",
+            "nullable": false
+          },
+          {
+            "name": "FullName",
+            "type": "computed",
+            "nullable": true,
+            "computed": true,
+            "computedExpr": "(FirstName + N' ' + LastName)"
+          },
+          {
+            "name": "Salary",
+            "type": "DECIMAL(12,2)",
+            "nullable": true,
+            "comment": "Gross annual salary"
+          },
+          {
+            "name": "Order",
+            "type": "INT",
+            "nullable": true
+          },
+          {
+            "name": "Weird]Name",
+            "type": "VARCHAR(10)",
+            "nullable": true
+          },
+          {
+            "name": "CompanyCarId",
+            "type": "INT",
+            "nullable": true
+          },
+          {
+            "name": "HiredOn",
+            "type": "DATE",
+            "nullable": true
+          },
+          {
+            "name": "TerminatedOn",
+            "type": "DATE",
+            "nullable": true
+          }
+        ],
+        "pk": {
+          "name": null,
+          "columns": [
+            "EmployeeId"
+          ]
+        },
+        "uniques": [],
+        "fks": [
+          {
+            "name": null,
+            "columns": [
+              "DepartmentId"
+            ],
+            "refSchema": "hr",
+            "refTable": "Departments",
+            "refColumns": [
+              "DepartmentId"
+            ],
+            "onDelete": "NO ACTION",
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          },
+          {
+            "name": "FK_Employees_CompanyCar",
+            "columns": [
+              "CompanyCarId"
+            ],
+            "refSchema": "fleet",
+            "refTable": "CompanyCars",
+            "refColumns": [
+              "CarId"
+            ],
+            "onDelete": null,
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          },
+          {
+            "name": "FK_Employees_Manager",
+            "columns": [
+              "ManagerId"
+            ],
+            "refSchema": "hr",
+            "refTable": "Employees",
+            "refColumns": [
+              "EmployeeId"
+            ],
+            "onDelete": null,
+            "onUpdate": null,
+            "disabled": false,
+            "trusted": true
+          }
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "statements": 15,
+    "applied": 7,
+    "partial": 0,
+    "ignored": 5,
+    "unread": 3,
+    "tables": 3,
+    "columns": 18,
+    "fks": 5,
+    "warnings": 4
+  },
+  "crossCheck": {
+    "checked": 5,
+    "confirmed": 0,
+    "disagreed": 0,
+    "grammarFailed": 5,
+    "misread": 0
+  },
+  "log": [
+    {
+      "line": 2,
+      "status": "ignored",
+      "kind": "if",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 2,
+      "status": "unread",
+      "kind": "exec",
+      "target": null,
+      "check": null,
+      "warnings": [
+        "Dynamic SQL inside EXEC(...) is not read: CREATE SCHEMA hr"
+      ]
+    },
+    {
+      "line": 4,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "hr.Departments",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 10,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "hr.Employees",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 24,
+      "status": "applied",
+      "kind": "create-table",
+      "target": "dbo.EmployeeBadges",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 29,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "hr.Employees",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 30,
+      "status": "applied",
+      "kind": "alter-table",
+      "target": "hr.Employees",
+      "check": "not-checked",
+      "warnings": []
+    },
+    {
+      "line": 31,
+      "status": "unread",
+      "kind": "alter-table",
+      "target": "hr.Payroll",
+      "check": null,
+      "warnings": [
+        "Could not apply \"ADD Bonus MONEY NULL\": table hr.Payroll is not created anywhere in this script at end of statement"
+      ]
+    },
+    {
+      "line": 32,
+      "status": "applied",
+      "kind": "comment",
+      "target": "hr.Employees",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 33,
+      "status": "applied",
+      "kind": "comment",
+      "target": "hr.Employees.Salary",
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 34,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 35,
+      "status": "ignored",
+      "kind": "insert",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 36,
+      "status": "ignored",
+      "kind": "set",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 37,
+      "status": "ignored",
+      "kind": "merge",
+      "target": null,
+      "check": null,
+      "warnings": []
+    },
+    {
+      "line": 38,
+      "status": "unread",
+      "kind": "other",
+      "target": null,
+      "check": null,
+      "warnings": [
+        "Statement not recognised; nothing was read from it."
+      ]
+    }
+  ],
+  "issues": [
+    {
+      "level": "warning",
+      "line": 30,
+      "message": "Foreign key FK_Employees_CompanyCar on Employees(CompanyCarId) references fleet.CompanyCars, which is not in the script. It is drawn as an external table."
+    }
+  ]
+}

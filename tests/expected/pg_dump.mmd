@@ -1,0 +1,32 @@
+erDiagram
+  public__accounts["public.accounts"] {
+    integer id PK
+    character_varying(255) email UK
+    text Display_Name "SQL name: Display Name"
+    text[] tags
+    timestamp_with_time_zone created_at
+    timestamp_without_time_zone updated_at
+  }
+  billing__invoices["billing.invoices"] {
+    integer account_id PK, FK
+    integer invoice_no PK
+    numeric(12,2) total
+    character(3) currency
+    date issued_on
+  }
+  billing__invoice_lines["billing.invoice_lines"] {
+    integer account_id PK, FK
+    integer invoice_no PK, FK
+    smallint line_no PK
+    text description
+    numeric(12,2) amount
+    bigint product_id "guessed FK to products"
+  }
+  public__products["public.products"] {
+    bigint product_id PK
+    character_varying(32) sku UK
+    double_precision price
+  }
+  public__accounts ||--o{ billing__invoices : "invoices_account_id_fkey"
+  billing__invoices ||--o{ billing__invoice_lines : "invoice_lines_invoice_fkey"
+  public__products |o..o{ billing__invoice_lines : "guess: product_id"
